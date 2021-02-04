@@ -1,0 +1,22 @@
+{
+  "name": "verk2",
+  "version": "1.0.0",
+  "description": "Verkefni 2 í vefforitun 2 2021",
+  "main": "app.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ass106/vef2-2021-v2.git"
+  },
+  "author": "ass106",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ass106/vef2-2021-v2/issues"
+  },
+  "homepage": "https://github.com/ass106/vef2-2021-v2#readme",
+  "dependencies": {
+    "pg": "^8.5.1"
+  }
+}
