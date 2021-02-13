@@ -1,123 +1,34 @@
 import express from 'express';
-import { body, validationResult } from 'express-validator';
+import dotenv from 'dotenv';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { router } from './src/registration.js';
+
+dotenv.config();
 
 const app = express();
 
-// Nú verður req.body til
+const path = dirname(fileURLToPath(import.meta.url));
+
+app.use(express.static(join(path, './public')));
 app.use(express.urlencoded({ extended: true }));
 
-const nationalIdPattern = '^[0-9]{6}-?[0-9]{4}$';
+app.set('views', './views');
+app.set('view engine', 'ejs');
 
-function template(name = '', email = '', nationalId = '') {
-  return `
-  <form method="post" action="/post">
-    <label>
-      Nafn:
-      <input required type="text" name="name" value="${name}">
-    </label>
-    <label>
-      Netfang:
-      <input required type="email" name="email" value="${email}">
-    </label>
-    <label>
-      Kennitala:
-      <input
-        required
-        type="text"
-        pattern="${nationalIdPattern}"
-        name="nationalId"
-        value="${nationalId}"
-      >
-    </label>
-    <button>Senda</button>
-  </form>
-  `;
+app.use(router);
+
+function errorHandler(err, req, res, next) { // eslint-disable-line
+  console.error(err); // eslint-disable-line
+  res.send('error');
 }
 
-app.get('/', (req, res) => {
-  res.send(template());
-});
+app.use(errorHandler);
 
-app.post(
-  '/post',
+const {
+  PORT: port = 3000,
+} = process.env;
 
-  // Þetta er bara validation, ekki sanitization
-  body('name')
-    .isLength({ min: 1 })
-    .withMessage('Nafn má ekki vera tómt'),
-  body('email')
-    .isLength({ min: 1 })
-    .withMessage('Netfang má ekki vera tómt'),
-  body('email')
-    .isEmail()
-    .withMessage('Netfang verður að vera gilt netfang'),
-  body('nationalId')
-    .isLength({ min: 1 })
-    .withMessage('Kennitala má ekki vera tóm'),
-  body('nationalId')
-    .matches(new RegExp(nationalIdPattern))
-    .withMessage('Kennitala verður að vera á formi 000000-0000 eða 0000000000'),
-
-  (req, res, next) => {
-    const {
-      name = '',
-      email = '',
-      nationalId = '',
-    } = req.body;
-
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      const errorMessages = errors.array().map(i => i.msg);
-      return res.send(
-        `${template(name, email, nationalId)}
-        <p>Villur:</p>
-        <ul>
-          <li>${errorMessages.join('</li><li>')}</li>
-        </ul>
-      `);
-    }
-
-    return next();
-  },
-  /* Nú sanitizeum við gögnin, þessar aðgerðir munu breyta gildum í body.req */
-  // Fjarlægja whitespace frá byrjun og enda
-  // „Escape“ á gögn, breytir stöfum sem hafa merkingu í t.d. HTML í entity
-  // t.d. < í &lt;
-  body('name').trim().escape(),
-  body('email').normalizeEmail(),
-
-  // Fjarlægjum - úr kennitölu, þó svo við leyfum í innslátt þá viljum við geyma
-  // á normalizeruðu formi (þ.e.a.s. allar geymdar sem 10 tölustafir)
-  // Hér gætum við viljað breyta kennitölu í heiltölu (int) en... það myndi
-  // skemma gögnin okkar, því kennitölur geta byrjað á 0
-  body('nationalId').blacklist('-'),
-
-  (req, res) => {
-
-    const {
-      name,
-      email,
-      nationalId,
-    } = req.body;
-
-    return res.send(`
-      <p>Skráning móttekin!</p>
-      <dl>
-        <dt>Nafn</dt>
-        <dd>${name}</dd>
-        <dt>Netfang</dt>
-        <dd>${email}</dd>
-        <dt>Kennitala</dt>
-        <dd>${nationalId}</dd>
-      </dl>
-    `);
-  },
-);
-
-const hostname = '127.0.0.1';
-const port = 3000;
-
-app.listen(port, hostname, () => {
-  console.info(`Server running at http://${hostname}:${port}/`);
+app.listen(port, () => {
+  console.info(`App running on http://localhost:${port}`); // eslint-disable-line
 });

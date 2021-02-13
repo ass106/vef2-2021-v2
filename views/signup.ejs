@@ -1,0 +1,35 @@
+<form class="container form" method="post" action="/">
+    <div class="row">
+      <label class="col col-2" for="name">Nafn*</label>
+      <input class="col col-9 <%= regInfo.name_invalid ? 'invalid':'valid' %>" type="text" name="name"
+        value="<%= regInfo.name %>" required><br>
+    </div>
+    <div class="row">
+      <label class="col col-2" for="ssn">Kennitala*</label>
+      <input class="col col-9 <%= regInfo.ssn_invalid ? 'invalid':'valid'%>" type="text" name="ssn" placeholder="000000-0000"
+        value="<%= regInfo.ssn %>" required><br>
+    </div>
+    <div class="row">
+      <label class="col col-2" for="comment">Athugasemd:</label>
+      <textarea class="col col-9" name="comment">
+    </textarea>
+    </div>
+    <div class="container">
+      <label class="" for="anon">
+      <input class="" type="checkbox" value="true" name="anon" />
+      Ekki birta nafn á lista</label>
+    </div>
+    <div class="container">
+      <button>Skrifa undir</button>
+    </div>
+  </form>
+  <% if(regInfo.errors.length !== 0) {%>
+    <div class="container">
+      <p class="row col villur"><strong>Villur við undirskrift</strong></p>
+      <ul class="row col villur">
+        <% for(let i = 0; i < regInfo.errors.length; i++) { %>
+          <li><%= regInfo.errors[i].msg %></li>
+        <% } %>
+      </ul>
+    </div>
+  <% } %>
