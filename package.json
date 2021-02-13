@@ -5,6 +5,7 @@
   "main": ".eslintrc.js",
   "type": "module",
   "scripts": {
+    "start": "nodemon app.js",
     "test": "test"
   },
   "repository": {
