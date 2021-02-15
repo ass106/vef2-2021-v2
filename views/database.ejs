@@ -1,23 +1,27 @@
-<div class="container">
-    <h2>Undirskriftir</h2>
+<div class="container my-5">
+    <h2 class="text-center">Undirskriftir</h2>
 </div>
 <% if(signatures.length === 0) { %>
     <div class="container">
       <p class="row col villur">Engar undirskriftir</p>
     </div>
   <% } else { %>
-  <table class="container">
-    <tr class="row tb-row tb-header">
-      <td class="col col-2"><strong>Dags</strong></td>
-      <td class="col col-2"><strong>Nafn</strong></td>
-      <td class="col col-7"><strong>Athugasemd</strong></td>
-    </tr>
-    <% signatures.forEach((signature) => { %>
-        <tr class="row tb-row">
-          <td class="col col-2"><%= signature.signed.toLocaleDateString() %></td>
-          <td class="col col-2"><%= signature.anonymous ? '' : signature.name %></td>
-          <td class="col col-7"><%= signature.comment %></td>
+    <div class="container">
+        <table class="table">
+        <tr class="row tb-row tb-header">
+          <td class="col col-2"><strong>Dags</strong></td>
+          <td class="col col-2"><strong>Nafn</strong></td>
+          <td class="col col-7"><strong>Athugasemd</strong></td>
         </tr>
-    <% }); %>
-  </table>
+        <% signatures.forEach((signature) => { %>
+          <% if (!signature.anonymous) { %>
+            <tr class="row tb-row">
+              <td class="col col-2"><%= signature.signed.toLocaleDateString() %></td>
+              <td class="col col-2"><%= signature.name %></td>
+              <td class="col col-7"><%= signature.comment %></td>
+            </tr>
+          <% } %>
+        <% }); %>
+        </table>
+    </div>
   <% } %>

@@ -19,7 +19,7 @@ if (!dev) {
 }
 
 const pool = new pg.Pool({ connectionString });
-
+console.log(connectionString);
 pool.on('error', (err) => {
   console.error('Unexpected error on idle client', err);
   process.exit(-1);

@@ -62,7 +62,6 @@ router.post('/',
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-    // villur í gögnum.
       errors.array().forEach((err) => {
         if (err.param === 'ssn') {
           regInfo.ssn_invalid = true;
@@ -80,7 +79,7 @@ router.post('/',
     // gögn eru OK
 
     const result = await sign([xss_name, xss_ssn, xss_comment, xss_anon]);
-    if (result !== 0) { // duplicate ssn
+    if (result !== 0) {
       res.redirect('/error');
       return;
     }
