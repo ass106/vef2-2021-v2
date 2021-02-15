@@ -20,7 +20,13 @@
               <td class="col col-2"><%= signature.name %></td>
               <td class="col col-7"><%= signature.comment %></td>
             </tr>
-          <% } %>
+            <% } else { %>
+              <tr class="row tb-row">
+                <td class="col col-2"><%= signature.signed.toLocaleDateString() %></td>
+                <td class="col col-2">Nafnlaus</td>
+                <td class="col col-7"><%= signature.comment %></td>
+              </tr>
+            <% } %>
         <% }); %>
         </table>
     </div>
